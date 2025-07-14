@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tombstone"
+version = "0.1.1"
+description = "Monitor directories for new files and add tombstone file when static"
+authors = [
+    {name = "Jeffrey Duda", email = "jeff.duda@gmail.com"}
+]
+license = {text = "CC BY-NC-SA 4.0"}
+readme = "README.md"
+requires-python = ">=3.10"
+
+[project.urls]
+"Homepage" = "https://github.com/pennainsights/tombstone"
+
+[project.scripts]
+tombstone = "tombstone.tombstone:main"
