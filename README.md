@@ -23,7 +23,7 @@ pip install tombstone
 ### Install from Source (github)
 
 ```bash
-git clone https://github.com/jeffduda/tombstone.git
+git clone https://github.com/PennAInSights/tombstone.git
 cd tombstone
 pip install .
 ```
