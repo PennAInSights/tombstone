@@ -38,6 +38,7 @@ class Tombstone:
 
     @property
     def depth(self):
+        """How many levels down to check for changes"""
         return self._depth
     
     @depth.setter
@@ -46,6 +47,7 @@ class Tombstone:
 
     @property
     def directory(self):
+        """The base directory to monitor for changes"""
         return self._directory
     
     @directory.setter
@@ -56,6 +58,7 @@ class Tombstone:
 
     @property
     def filename(self):
+        """The filename to use when creating a new tombstone file"""
         return self._filename
     
     @filename.setter
@@ -64,6 +67,7 @@ class Tombstone:
 
     @property
     def files(self):
+        """Flag indicating if file mtimes should be checked (default=False)"""
         return self._files
 
     @files.setter
@@ -72,6 +76,7 @@ class Tombstone:
 
     @property
     def level(self):
+        """How far below base directory to start monitoring"""
         return self._level
     
     @level.setter
@@ -80,6 +85,7 @@ class Tombstone:
 
     @property
     def monitor(self):
+        """List of most recently monitored directories"""
         return self._monitor
 
     @monitor.setter
@@ -88,6 +94,7 @@ class Tombstone:
 
     @property
     def static(self):
+        """Most recent list of directories that meet the criteria for being 'static'"""
         return self._static
     
     @static.setter
@@ -96,6 +103,7 @@ class Tombstone:
 
     @property
     def threshold(self):
+        """Time threshold (in seconds) for marking a directory as 'static'"""
         return self._threshold
     
     @threshold.setter
@@ -106,6 +114,13 @@ class Tombstone:
 
     @property
     def queue(self):
+        """List with 3 elements giving RabbitMQ info
+
+        queue[0] = IP address
+        queue[1] = Port#
+        queuep[2] = Queue name
+        """
+
         return self._queue      
 
     @queue.setter
@@ -114,6 +129,13 @@ class Tombstone:
 
     # walk through a directory up to the specified depth of levels
     def walk_to_depth(self, directory: str, depth: int):
+        """Walk a directory to a set depth and return mtimes for dirs
+        and optionaly for files
+
+        Keyword arguments:
+        directory: directory to start the walk at
+        depth: max levels of subdirectories to traverse
+        """
 
         directory = os.path.normpath(directory)
         assert os.path.isdir(directory)
@@ -125,11 +147,17 @@ class Tombstone:
             if (current_level - base_level) >= depth:
                 del dirs[:]
 
-
-    # Get the list of directories to monitor. These are subdirectories that
-    #   are the specified number of levels below the base directory
-    #   and do not currently contain a tombstone file
     def get_dirs_list(self, directories: list, levels: int, continuous: bool):
+        """Get the list of directories to monitor. These are subdirectories that
+        are the specified number of levels below the base directory
+        and do not currently contain a tombstone file
+
+        Keyword arguments:
+        directories: list directories to check
+        levels: how far down to check
+        continuous: flag to check all subdirs instead of just at level of depth
+        """
+
         dlevel = 0
         outlist = []
         finished = False
@@ -159,7 +187,12 @@ class Tombstone:
 
         return(outlist)
 
-    def make_obituary(self, tombname):
+    def make_obituary(self, tombname: str):
+        """Create a message indicating a tombstone has been created
+
+        Keyword arguments:
+        tombname: name of the tombstone file
+        """
 
         content = {
             "sender" : "tombstone",
@@ -172,9 +205,12 @@ class Tombstone:
         return(msg_str)
 
     def send_obituary(self, obituary):
+        """Send a message about a new tombstone
 
+        Keyword arguments:
+        obituary: message to send out
+        """
         if self.queue is not None:
-
 
             connection = pika.BlockingConnection( 
                     pika.ConnectionParameters(
@@ -187,7 +223,11 @@ class Tombstone:
             connection.close()
 
     def update(self, make_tombstones=True):
+        """Scan all directories to check for static condition
 
+        Keyword arguments:
+        make_tombstones: flag to indicate tombstones should be created (default=True)
+        """
         # current timestamp for reference
         timestamp = datetime.datetime.now().timestamp()
 
