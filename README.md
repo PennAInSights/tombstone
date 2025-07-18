@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/tombstone_logo.png" alt="PMBB Brick" width="256" /></p>
+
 # tombstone
 
 tombstone is a simple class that examines subdirectories under a base directory at a specified level. The last modified time is determined for each subdirectory and if the subdirectory is older than the provided threshold, a "tombstone" file is added to mark the directory as static. Optionally, the mtime of files may also be considered. This is indended to help monitor directories that are receiving data but lack other criteria to determine when the transfer is complete.
