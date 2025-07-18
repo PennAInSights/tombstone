@@ -157,7 +157,6 @@ class Tombstone:
         levels: how far down to check
         continuous: flag to check all subdirs instead of just at level of depth
         """
-
         dlevel = 0
         outlist = []
         finished = False
